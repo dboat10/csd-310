@@ -16,7 +16,8 @@ try:
     print("\n Database user {} connected to MySQL on host {} with database {}".format(config["user"], config["host"],
                                                                                       config["database"]))
     cursor = db.cursor()
-    query = "SELECT equipment_id, equipment_name, acquisition_date " \
+    query = "SELECT equipment_id, equipment_name, acquisition_date, " \
+            "Concat(floor(datediff(curdate(), acquisition_date) / 365), ' years') as Age_of_equipment " \
             "FROM equipment " \
             "WHERE acquisition_date < date_sub(curdate(), interval 5 year);"
     cursor.execute(query)
@@ -27,6 +28,7 @@ try:
         print("\nEquipment ID:", equipment[0])
         print("Equipment Name:", equipment[1])
         print("Acquisition Date:", equipment[2])
+        print("Equipment Age:", equipment[3])
 
 except mysql.connector as Error:
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
